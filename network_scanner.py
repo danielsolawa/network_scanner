@@ -18,12 +18,6 @@ def get_arguments():
         if not re.match(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", options.ip_address):
             parser.error("[-] You have typed a wrong ip address.")
 
-    if not options.mac_address:
-        parser.error("[-] You have to specify aa MAC address. Type -h for more info")
-    else:
-        if not re.match(r"\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}", options.mac_address):
-            parser.error("[-] You have typed a wrong MAC address.")
-
     return options
 
 
@@ -31,7 +25,7 @@ def get_client_list():
     arguments = get_arguments()
 
     arp_request = scapy.ARP(pdst=arguments.ip_address + "/24")
-    broadcast = scapy.Ether(dst=arguments.mac_address)
+    broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
     full_request = broadcast/arp_request
     answered = scapy.srp(full_request, timeout=1, verbose=False)[0]
 
